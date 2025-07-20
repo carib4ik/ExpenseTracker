@@ -12,7 +12,7 @@ public class ExpensesController(IExpenseService service) : ControllerBase
     public async Task<IActionResult> Create([FromBody] CreateExpenseDto dto, CancellationToken ct)
     {
         var id = await service.CreateExpenseAsync(dto, ct);
-        return CreatedAtAction(nameof(Ok), new { id }, null); // пока GetById нет — можно заменить на Ok(id)
+        return CreatedAtAction(nameof(GetById), new { id }, null);
     }
 
     [HttpGet]
@@ -27,5 +27,15 @@ public class ExpensesController(IExpenseService service) : ControllerBase
     {
         await service.DeleteExpenseAsync(id, ct);
         return NoContent();
+    }
+    
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetById(Guid id, CancellationToken ct)
+    {
+        var expense = await service.GetByIdAsync(id, ct);
+        if (expense == null)
+            return NotFound();
+
+        return Ok(expense);
     }
 }

@@ -64,4 +64,22 @@ public class ExpenseService : IExpenseService
         _db.Expenses.Remove(expense);
         await _db.SaveChangesAsync(ct);
     }
+    
+    public async Task<ExpenseDto?> GetByIdAsync(Guid id, CancellationToken ct)
+    {
+        var expense = await _db.Expenses
+            .Include(e => e.Category)
+            .FirstOrDefaultAsync(e => e.Id == id, ct);
+
+        if (expense == null) return null;
+
+        return new ExpenseDto
+        {
+            Id = expense.Id,
+            Title = expense.Title,
+            Amount = expense.Amount,
+            Date = expense.Date,
+            CategoryName = expense.Category?.Name ?? "(Без категории)"
+        };
+    }
 }

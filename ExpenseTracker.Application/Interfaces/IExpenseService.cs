@@ -9,4 +9,6 @@ public interface IExpenseService
     Task<List<ExpenseDto>> GetExpensesAsync(DateTime from, DateTime to, CancellationToken ct);
     
     Task DeleteExpenseAsync(Guid id, CancellationToken ct);
+    
+    Task<ExpenseDto?> GetByIdAsync(Guid id, CancellationToken ct);
 }

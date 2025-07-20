@@ -6,18 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseTracker.Infrastructure.Services;
 
-public class ExpenseService : IExpenseService
+public class ExpenseService(ExpenseTrackerDbContext context) : IExpenseService
 {
-    private readonly ExpenseTrackerDbContext _db;
-
-    public ExpenseService(ExpenseTrackerDbContext context)
-    {
-        _db = context;
-    }
-    
     public async Task<Guid> CreateExpenseAsync(CreateExpenseDto dto, CancellationToken ct)
     {
-        var category = await _db.Categories.FindAsync(new object[] { dto.CategoryId }, ct);
+        var category = await context.Categories.FindAsync(new object[] { dto.CategoryId }, ct);
 
         if (category == null)
             throw new Exception("Категория не найдена");
@@ -31,15 +24,32 @@ public class ExpenseService : IExpenseService
             CategoryId = dto.CategoryId
         };
 
-        _db.Expenses.Add(expense);
-        await _db.SaveChangesAsync(ct);
+        context.Expenses.Add(expense);
+        await context.SaveChangesAsync(ct);
 
         return expense.Id;
     }
 
+    public async Task<List<ExpenseDto>> GetExpensesAsync(CancellationToken ct)
+    {
+        var expenses = await context.Expenses
+            .Include(e => e.Category)
+            .OrderByDescending(e => e.Date)
+            .ToListAsync(ct);
+        
+        return expenses.Select(e => new ExpenseDto
+        {
+            Id = e.Id,
+            Title = e.Title,
+            Amount = e.Amount,
+            Date = e.Date,
+            CategoryName = e.Category?.Name ?? "(Без категории)"
+        }).ToList();
+    }
+
     public async Task<List<ExpenseDto>> GetExpensesAsync(DateTime from, DateTime to, CancellationToken ct)
     {
-        var expenses = await _db.Expenses
+        var expenses = await context.Expenses
             .Include(e => e.Category)
             .Where(e => e.Date >= from && e.Date <= to)
             .OrderByDescending(e => e.Date)
@@ -57,17 +67,17 @@ public class ExpenseService : IExpenseService
 
     public async Task DeleteExpenseAsync(Guid id, CancellationToken ct)
     {
-        var expense = await _db.Expenses.FindAsync(new object[] { id }, ct);
+        var expense = await context.Expenses.FindAsync(new object[] { id }, ct);
         if (expense == null)
             throw new Exception("Расход не найден");
 
-        _db.Expenses.Remove(expense);
-        await _db.SaveChangesAsync(ct);
+        context.Expenses.Remove(expense);
+        await context.SaveChangesAsync(ct);
     }
     
     public async Task<ExpenseDto?> GetByIdAsync(Guid id, CancellationToken ct)
     {
-        var expense = await _db.Expenses
+        var expense = await context.Expenses
             .Include(e => e.Category)
             .FirstOrDefaultAsync(e => e.Id == id, ct);
 

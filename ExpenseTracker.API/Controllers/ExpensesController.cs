@@ -14,9 +14,16 @@ public class ExpensesController(IExpenseService service) : ControllerBase
         var id = await service.CreateExpenseAsync(dto, ct);
         return CreatedAtAction(nameof(GetById), new { id }, null);
     }
+    
+    [HttpGet("all")]
+    public async Task<ActionResult<List<ExpenseDto>>> GetAll(CancellationToken ct)
+    {
+        var expenses = await service.GetExpensesAsync(ct);
+        return Ok(expenses);
+    }
 
-    [HttpGet]
-    public async Task<ActionResult<List<ExpenseDto>>> GetAll([FromQuery] DateTime from, [FromQuery] DateTime to, CancellationToken ct)
+    [HttpGet("by-date")]
+    public async Task<ActionResult<List<ExpenseDto>>> GetByDate([FromQuery] DateTime from, [FromQuery] DateTime to, CancellationToken ct)
     {
         var expenses = await service.GetExpensesAsync(from, to, ct);
         return Ok(expenses);

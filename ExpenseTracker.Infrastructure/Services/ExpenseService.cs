@@ -20,7 +20,7 @@ public class ExpenseService(ExpenseTrackerDbContext context) : IExpenseService
             Id = Guid.NewGuid(),
             Title = dto.Title,
             Amount = dto.Amount,
-            Date = dto.Date,
+            Date = DateTime.SpecifyKind(dto.Date, DateTimeKind.Utc),
             CategoryId = dto.CategoryId
         };
 

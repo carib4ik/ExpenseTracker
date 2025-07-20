@@ -16,9 +16,16 @@ static async Task MainAsync()
     builder.Services.AddControllers(); 
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
-
-    Console.WriteLine("ConnectionString: " + builder.Configuration.GetConnectionString("Default"));
-
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("AllowDevClient", policy =>
+        {
+            policy.WithOrigins("http://localhost:5173") // порт Vite
+                .AllowAnyHeader()
+                .AllowAnyMethod(); // обязательно!
+        });
+    });
+    
     var app = builder.Build();
 
     using (var scope = app.Services.CreateScope())
@@ -26,6 +33,8 @@ static async Task MainAsync()
         var context = scope.ServiceProvider.GetRequiredService<ExpenseTrackerDbContext>();
         await DbSeeder.SeedAsync(context);
     }
+    
+    app.UseCors("AllowDevClient");
 
     if (app.Environment.IsDevelopment())
     {

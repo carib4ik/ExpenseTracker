@@ -15,6 +15,13 @@ public class ExpensesController(IExpenseService service) : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id }, null);
     }
     
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateExpenseDto dto, CancellationToken ct)
+    {
+        await service.UpdateExpenseAsync(id, dto, ct);
+        return NoContent();
+    }
+    
     [HttpGet("all")]
     public async Task<ActionResult<List<ExpenseDto>>> GetAll(CancellationToken ct)
     {
@@ -40,9 +47,6 @@ public class ExpensesController(IExpenseService service) : ControllerBase
     public async Task<IActionResult> GetById(Guid id, CancellationToken ct)
     {
         var expense = await service.GetByIdAsync(id, ct);
-        if (expense == null)
-            return NotFound();
-
-        return Ok(expense);
+        return expense == null ? NotFound() : Ok(expense);
     }
 }

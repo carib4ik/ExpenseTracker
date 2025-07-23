@@ -12,7 +12,6 @@ public class ExpenseTrackerDbContext(DbContextOptions<ExpenseTrackerDbContext> o
     {
         base.OnModelCreating(modelBuilder);
 
-        // Пример Fluent API настройки:
         modelBuilder.Entity<Category>()
             .HasMany(c => c.Expenses)
             .WithOne(e => e.Category!)

@@ -20,9 +20,9 @@ static async Task MainAsync()
     {
         options.AddPolicy("AllowDevClient", policy =>
         {
-            policy.WithOrigins("http://localhost:5173") // порт Vite
+            policy.WithOrigins("http://localhost:5173") 
                 .AllowAnyHeader()
-                .AllowAnyMethod(); // обязательно!
+                .AllowAnyMethod(); 
         });
     });
     

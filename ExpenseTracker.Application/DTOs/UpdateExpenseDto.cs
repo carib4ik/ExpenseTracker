@@ -1,11 +1,11 @@
 namespace ExpenseTracker.Application.DTOs;
 
-public class ExpenseDto
+public class UpdateExpenseDto
 {
     public Guid Id { get; set; }
     public string Title { get; set; } = null!;
     public decimal Amount { get; set; }
-    public DateTime Date { get; set; }
-    public string CategoryName { get; set; } = null!;
     public Guid CategoryId { get; set; }
+    public DateTime Date { get; set; }
+    public string? Notes { get; set; }
 }

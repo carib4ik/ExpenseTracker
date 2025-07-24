@@ -2,7 +2,7 @@
 
 A simple web application for tracking personal expenses. Built with ASP.NET Core, PostgreSQL, Docker
 
-## ⚙️ Technologies Used
+## Technologies Used
 
 ### Backend:
 - ASP.NET Core 9
@@ -12,7 +12,7 @@ A simple web application for tracking personal expenses. Built with ASP.NET Core
 - Dependency Injection, DTOs, CORS
 - Swagger / OpenAPI
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 ExpenseTracker/
@@ -22,7 +22,7 @@ ExpenseTracker/
 ├── client/                       # React frontend
 ```
 
-## 🚀 Getting Started
+## Getting Started
 
 ### 1. Clone the repository
 

@@ -17,9 +17,9 @@ A simple web application for tracking personal expenses. Built with ASP.NET Core
 ```
 ExpenseTracker/
 ├── ExpenseTracker.API/           # ASP.NET Core API project
+  ├── client/                       # React frontend
 ├── ExpenseTracker.Application/   # Application layer (DTOs, Interfaces)
 ├── ExpenseTracker.Infrastructure/# Infrastructure layer (EF Core, Services)
-├── client/                       # React frontend
 ```
 
 ## Getting Started
